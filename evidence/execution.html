@@ -1,0 +1,31 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Лабораторная 10 — результат выполнения</title><style>
+*{box-sizing:border-box}body{min-width:1280px;margin:0;background:#edf1f7;color:#17253d;font:16px system-ui;padding:28px 36px}main{max-width:1220px;margin:auto}header{display:flex;align-items:center;justify-content:space-between}h1{font-size:25px;margin:0 0 5px}p{margin:0;color:#53647a}span{padding:8px 13px;background:#d5f1e4;border-radius:8px;color:#165938;font-weight:650;font-size:14px}pre{margin:22px 0 12px;padding:24px 28px;background:white;border:1px solid #d8dfeb;border-radius:12px;font:14px/1.62 ui-monospace,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere}footer{color:#53647a;font-size:12px}</style><main><header><div><h1>Университетская информационная система</h1><p>Лабораторная 10 · Фактический результат компиляции, проверок и запуска Java</p></div><span>Все проверки пройдены</span></header><pre>javac 25.0.1
+$ javac -encoding UTF-8 --release 17 -d build/classes &lt;10 Java files&gt;
+Компиляция: успешно (exit 0)
+Согласованность модели и байткода: 9 классов, все поля и сигнатуры совпадают
+PASS: 35 проверок ограничений предметной модели
+PASS: интерактивный ввод UC-01…UC-06 и обработка неверной даты
+
+$ java -cp build/classes ru.lab10.cli.App --demo
+Университетская информационная система — демонстрация UC-01…UC-06
+
+Воронежский государственный университет
+Сотрудников научно-педагогического состава: 2
+Факультет: ФКН; декан: Иванов Иван Иванович
+  Кафедра: Программирование и ИТ; Университетская пл., 1
+  Кафедра: Информационные системы; Университетская пл., 1
+Сотрудник: R-001 | Иванов Иван Иванович | ivanov@vsu.ru
+  Исследования: Инженерия ПО
+  Прикрепление: Программирование и ИТ
+  Прикрепление: Информационные системы
+  Проект: Цифровой университет | 2026-09-01 — 2027-08-31 | 120 ч.
+  Курс: CS-101 | Проектирование информационных систем | 4 ч./нед.
+Сотрудник: R-002 | Петрова Анна Сергеевна | petrova@vsu.ru
+  Исследования: Анализ данных
+  Прикрепление: Информационные системы
+  Проект: Цифровой университет | 2026-09-01 — 2027-08-31 | 80 ч.
+
+Проверка ограничения: курс может вести только преподаватель
+Ожидаемый отказ: Сотрудник не является преподавателем
+Демонстрация завершена успешно.
+</pre><footer>Источник: evidence/build-and-demo.txt · Локальное представление журнала выполнения · Демонстрационные данные</footer></main></html>

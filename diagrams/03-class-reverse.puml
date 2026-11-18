@@ -1,0 +1,140 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+title Обратный инжиниринг: javap → классы, поля и методы
+class App {
+  -final University university
+  -final Scanner input
+  +App()
+  +static void main(String[])
+  +void run()
+  -String read(String)
+  -Faculty faculty(String)
+  -Institute institute()
+  +void manageStructure()
+  +void manageEmployee()
+  +void appointDean()
+  +void assignProject()
+  +void assignCourse()
+  +void printSummary()
+  +void demo()
+}
+class Course {
+  -final String id
+  -final String name
+  -final int weeklyDuration
+  -final Set<Lecturer> lecturers
+  ~Course(String, String, int, Lecturer)
+  +String getId()
+  +String getName()
+  +int getWeeklyDuration()
+  +Set<Lecturer> getLecturers()
+  ~void addLecturer(Lecturer)
+}
+abstract class Employee {
+  -final String socialSecurityNumber
+  -final String name
+  -final String email
+  #Employee(String, String, String)
+  +String getSocialSecurityNumber()
+  +String getName()
+  +String getEmail()
+}
+class Faculty {
+  -final University university
+  -final String name
+  -Employee dean
+  -final List<Institute> institutes
+  ~Faculty(University, String)
+  +Institute addInstitute(String, String)
+  +void appointDean(Employee)
+  +List<Institute> getInstitutes()
+  +University getUniversity()
+  +String getName()
+  +Employee getDean()
+}
+class Institute {
+  -final Faculty faculty
+  -final String name
+  -final String address
+  ~Institute(Faculty, String, String)
+  +Faculty getFaculty()
+  +String getName()
+  +String getAddress()
+}
+class Lecturer {
+  -final List<Course> courses
+  ~Lecturer(String, String, String, String, Institute)
+  ~void teachCourse(Course)
+  +List<Course> getCourses()
+}
+class Participation {
+  -final ResearchEmployee employee
+  -final Project project
+  -final int hours
+  ~Participation(ResearchEmployee, Project, int)
+  +ResearchEmployee getEmployee()
+  +Project getProject()
+  +int getHours()
+}
+class Project {
+  -final String name
+  -final LocalDate startingDate
+  -final LocalDate endDate
+  ~Project(String, LocalDate, LocalDate)
+  +String getName()
+  +LocalDate getStartingDate()
+  +LocalDate getEndDate()
+}
+class ResearchEmployee {
+  -final String researchArea
+  -final Set<Institute> institutes
+  -final List<Participation> participations
+  ~ResearchEmployee(String, String, String, String, Institute)
+  +void attachTo(Institute)
+  ~Participation joinProject(Project, int)
+  +Set<Institute> getInstitutes()
+  +List<Participation> getParticipations()
+  +String getResearchArea()
+}
+class University {
+  -final String name
+  -final List<Faculty> faculties
+  -final List<ResearchEmployee> employees
+  -final List<Project> projects
+  -final List<Course> courses
+  +University(String)
+  +Faculty addFaculty(String)
+  +ResearchEmployee registerEmployee(String, String, String, String, Institute, boolean)
+  +ResearchEmployee findEmployee(String)
+  +Project createProject(String, LocalDate, LocalDate)
+  +Participation assignToProject(String, Project, int)
+  +Course assignCourse(String, String, String, int)
+  +void validateReady()
+  +int getNumberOfEmployees()
+  +List<Faculty> getFaculties()
+  +List<ResearchEmployee> getEmployees()
+  +List<Project> getProjects()
+  +List<Course> getCourses()
+  +String getName()
+}
+App --> University : university
+Course --> Lecturer : lecturers
+Employee <|-- ResearchEmployee
+Faculty --> Employee : dean
+Faculty --> Institute : institutes
+Faculty --> University : university
+Institute --> Faculty : faculty
+Lecturer --> Course : courses
+Participation --> Project : project
+Participation --> ResearchEmployee : employee
+ResearchEmployee --> Institute : institutes
+ResearchEmployee --> Participation : participations
+ResearchEmployee <|-- Lecturer
+University --> Course : courses
+University --> Faculty : faculties
+University --> Project : projects
+University --> ResearchEmployee : employees
+@enduml

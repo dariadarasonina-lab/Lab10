@@ -1,0 +1,129 @@
+@startuml
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+skinparam packageStyle rectangle
+skinparam classBackgroundColor #F1F5FF
+
+title Университетская информационная система — модель классов
+
+abstract class Employee {
+  -final String socialSecurityNumber
+  -final String name
+  -final String email
+  #Employee(String socialSecurityNumber, String name, String email)
+  +String getSocialSecurityNumber()
+  +String getName()
+  +String getEmail()
+}
+class Institute {
+  -final Faculty faculty
+  -final String name
+  -final String address
+  ~Institute(Faculty faculty, String name, String address)
+  +Faculty getFaculty()
+  +String getName()
+  +String getAddress()
+}
+class Faculty {
+  -final University university
+  -final String name
+  -Employee dean
+  -final List<Institute> institutes
+  ~Faculty(University university, String name)
+  +Institute addInstitute(String name, String address)
+  +void appointDean(Employee employee)
+  +List<Institute> getInstitutes()
+  +University getUniversity()
+  +String getName()
+  +Employee getDean()
+}
+class Project {
+  -final String name
+  -final LocalDate startingDate
+  -final LocalDate endDate
+  ~Project(String name, LocalDate startingDate, LocalDate endDate)
+  +String getName()
+  +LocalDate getStartingDate()
+  +LocalDate getEndDate()
+}
+class Participation {
+  -final ResearchEmployee employee
+  -final Project project
+  -final int hours
+  ~Participation(ResearchEmployee employee, Project project, int hours)
+  +ResearchEmployee getEmployee()
+  +Project getProject()
+  +int getHours()
+}
+class ResearchEmployee {
+  -final String researchArea
+  -final Set<Institute> institutes
+  -final List<Participation> participations
+  ~ResearchEmployee(String socialSecurityNumber, String name, String email, String researchArea, Institute institute)
+  +void attachTo(Institute institute)
+  ~Participation joinProject(Project project, int hours)
+  +Set<Institute> getInstitutes()
+  +List<Participation> getParticipations()
+  +String getResearchArea()
+}
+Employee <|-- ResearchEmployee
+class Course {
+  -final String id
+  -final String name
+  -final int weeklyDuration
+  -final Set<Lecturer> lecturers
+  ~Course(String id, String name, int weeklyDuration, Lecturer lecturer)
+  +String getId()
+  +String getName()
+  +int getWeeklyDuration()
+  +Set<Lecturer> getLecturers()
+  ~void addLecturer(Lecturer lecturer)
+}
+class Lecturer {
+  -final List<Course> courses
+  ~Lecturer(String socialSecurityNumber, String name, String email, String researchArea, Institute institute)
+  ~void teachCourse(Course course)
+  +List<Course> getCourses()
+}
+ResearchEmployee <|-- Lecturer
+class University {
+  -final String name
+  -final List<Faculty> faculties
+  -final List<ResearchEmployee> employees
+  -final List<Project> projects
+  -final List<Course> courses
+  +University(String name)
+  +Faculty addFaculty(String name)
+  +ResearchEmployee registerEmployee(String ssn, String name, String email, String area, Institute institute, boolean lecturer)
+  +ResearchEmployee findEmployee(String ssn)
+  +Project createProject(String name, LocalDate start, LocalDate end)
+  +Participation assignToProject(String ssn, Project project, int hours)
+  +Course assignCourse(String ssn, String id, String name, int weeklyDuration)
+  +void validateReady()
+  +int getNumberOfEmployees()
+  +List<Faculty> getFaculties()
+  +List<ResearchEmployee> getEmployees()
+  +List<Project> getProjects()
+  +List<Course> getCourses()
+  +String getName()
+}
+class App <<boundary>> {
+  +void assignCourse()
+  +void run()
+  +void main(String[] args) {static}
+}
+App --> University : university
+University "1" *-- "0..*" Faculty : faculties
+Faculty "1" *-- "0..*" Institute : institutes
+University "1" o-- "0..*" ResearchEmployee : employees
+Faculty "0..1" --> "0..1" Employee : dean
+ResearchEmployee "0..*" --> "1..*" Institute : institutes
+ResearchEmployee "1" *-- "0..*" Participation : participations
+Participation "0..*" --> "1" Project : project
+University "1" o-- "0..*" Project : projects
+University "1" o-- "0..*" Course : courses
+Lecturer "1..*" -- "0..*" Course : teaches
+note "Черновик: 0..* факультетов/кафедр, декан 0..1.\nvalidateReady(): факультетов >= 1, кафедр >= 1, декан = 1.\nУ каждого исследователя всегда >= 1 кафедры." as Constraints
+@enduml

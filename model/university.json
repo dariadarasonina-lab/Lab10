@@ -1,0 +1,335 @@
+{
+  "package": "ru.lab10.domain",
+  "classes": [
+    {
+      "name": "Employee",
+      "fields": [
+        "private final String socialSecurityNumber",
+        "private final String name",
+        "private final String email"
+      ],
+      "methods": [
+        {
+          "signature": "protected Employee(String socialSecurityNumber, String name, String email)",
+          "body": "if (socialSecurityNumber == null || socialSecurityNumber.isBlank() || name == null || name.isBlank()\n        || email == null || !email.matches(\"[^\\\\s@]+@[^\\\\s@]+\\\\.[^\\\\s@]+\"))\n    throw new IllegalArgumentException(\"Нужны социальный код, имя и корректный e-mail\");\nthis.socialSecurityNumber = socialSecurityNumber.strip();\nthis.name = name.strip();\nthis.email = email.strip();"
+        },
+        {
+          "signature": "public String getSocialSecurityNumber()",
+          "body": "return socialSecurityNumber;"
+        },
+        {
+          "signature": "public String getName()",
+          "body": "return name;"
+        },
+        {
+          "signature": "public String getEmail()",
+          "body": "return email;"
+        }
+      ],
+      "parent": null,
+      "abstract": true
+    },
+    {
+      "name": "Institute",
+      "fields": [
+        "private final Faculty faculty",
+        "private final String name",
+        "private final String address"
+      ],
+      "methods": [
+        {
+          "signature": "Institute(Faculty faculty, String name, String address)",
+          "body": "this.faculty = Objects.requireNonNull(faculty);\nif (name == null || name.isBlank() || address == null || address.isBlank())\n    throw new IllegalArgumentException(\"Нужны название и адрес кафедры\");\nthis.name = name.strip();\nthis.address = address.strip();"
+        },
+        {
+          "signature": "public Faculty getFaculty()",
+          "body": "return faculty;"
+        },
+        {
+          "signature": "public String getName()",
+          "body": "return name;"
+        },
+        {
+          "signature": "public String getAddress()",
+          "body": "return address;"
+        }
+      ],
+      "parent": null,
+      "abstract": false
+    },
+    {
+      "name": "Faculty",
+      "fields": [
+        "private final University university",
+        "private final String name",
+        "private Employee dean",
+        "private final List<Institute> institutes = new ArrayList<>()"
+      ],
+      "methods": [
+        {
+          "signature": "Faculty(University university, String name)",
+          "body": "this.university = Objects.requireNonNull(university);\nif (name == null || name.isBlank()) throw new IllegalArgumentException(\"Нужно название факультета\");\nthis.name = name.strip();"
+        },
+        {
+          "signature": "public Institute addInstitute(String name, String address)",
+          "body": "if (institutes.stream().anyMatch(i -> i.getName().equals(name == null ? \"\" : name.strip())))\n    throw new IllegalArgumentException(\"Кафедра уже существует\");\nInstitute institute = new Institute(this, name, address);\ninstitutes.add(institute);\nreturn institute;"
+        },
+        {
+          "signature": "public void appointDean(Employee employee)",
+          "body": "if (!university.getEmployees().contains(employee))\n    throw new IllegalArgumentException(\"Декан должен быть сотрудником этого университета\");\nif (university.getFaculties().stream().anyMatch(f -> f != this && f.getDean() == employee))\n    throw new IllegalArgumentException(\"Сотрудник уже является деканом другого факультета\");\ndean = employee;"
+        },
+        {
+          "signature": "public List<Institute> getInstitutes()",
+          "body": "return Collections.unmodifiableList(institutes);"
+        },
+        {
+          "signature": "public University getUniversity()",
+          "body": "return university;"
+        },
+        {
+          "signature": "public String getName()",
+          "body": "return name;"
+        },
+        {
+          "signature": "public Employee getDean()",
+          "body": "return dean;"
+        }
+      ],
+      "parent": null,
+      "abstract": false
+    },
+    {
+      "name": "Project",
+      "fields": [
+        "private final String name",
+        "private final LocalDate startingDate",
+        "private final LocalDate endDate"
+      ],
+      "methods": [
+        {
+          "signature": "Project(String name, LocalDate startingDate, LocalDate endDate)",
+          "body": "if (name == null || name.isBlank() || startingDate == null || endDate == null || endDate.isBefore(startingDate))\n    throw new IllegalArgumentException(\"Нужны название и даты проекта: начало <= окончание\");\nthis.name = name.strip();\nthis.startingDate = startingDate;\nthis.endDate = endDate;"
+        },
+        {
+          "signature": "public String getName()",
+          "body": "return name;"
+        },
+        {
+          "signature": "public LocalDate getStartingDate()",
+          "body": "return startingDate;"
+        },
+        {
+          "signature": "public LocalDate getEndDate()",
+          "body": "return endDate;"
+        }
+      ],
+      "parent": null,
+      "abstract": false
+    },
+    {
+      "name": "Participation",
+      "fields": [
+        "private final ResearchEmployee employee",
+        "private final Project project",
+        "private final int hours"
+      ],
+      "methods": [
+        {
+          "signature": "Participation(ResearchEmployee employee, Project project, int hours)",
+          "body": "this.employee = Objects.requireNonNull(employee);\nthis.project = Objects.requireNonNull(project);\nif (hours <= 0) throw new IllegalArgumentException(\"Часы участия должны быть положительными\");\nthis.hours = hours;"
+        },
+        {
+          "signature": "public ResearchEmployee getEmployee()",
+          "body": "return employee;"
+        },
+        {
+          "signature": "public Project getProject()",
+          "body": "return project;"
+        },
+        {
+          "signature": "public int getHours()",
+          "body": "return hours;"
+        }
+      ],
+      "parent": null,
+      "abstract": false
+    },
+    {
+      "name": "ResearchEmployee",
+      "fields": [
+        "private final String researchArea",
+        "private final Set<Institute> institutes = new LinkedHashSet<>()",
+        "private final List<Participation> participations = new ArrayList<>()"
+      ],
+      "methods": [
+        {
+          "signature": "ResearchEmployee(String socialSecurityNumber, String name, String email, String researchArea, Institute institute)",
+          "body": "super(socialSecurityNumber, name, email);\nif (researchArea == null || researchArea.isBlank()) throw new IllegalArgumentException(\"Нужна область исследований\");\nthis.researchArea = researchArea.strip();\ninstitutes.add(Objects.requireNonNull(institute));"
+        },
+        {
+          "signature": "public void attachTo(Institute institute)",
+          "body": "Objects.requireNonNull(institute);\nUniversity university = institutes.iterator().next().getFaculty().getUniversity();\nif (institute.getFaculty().getUniversity() != university)\n    throw new IllegalArgumentException(\"Кафедра другого университета\");\ninstitutes.add(institute);"
+        },
+        {
+          "signature": "Participation joinProject(Project project, int hours)",
+          "body": "if (participations.stream().anyMatch(p -> p.getProject() == project))\n    throw new IllegalArgumentException(\"Сотрудник уже участвует в проекте\");\nParticipation participation = new Participation(this, project, hours);\nparticipations.add(participation);\nreturn participation;"
+        },
+        {
+          "signature": "public Set<Institute> getInstitutes()",
+          "body": "return Collections.unmodifiableSet(institutes);"
+        },
+        {
+          "signature": "public List<Participation> getParticipations()",
+          "body": "return Collections.unmodifiableList(participations);"
+        },
+        {
+          "signature": "public String getResearchArea()",
+          "body": "return researchArea;"
+        }
+      ],
+      "parent": "Employee",
+      "abstract": false
+    },
+    {
+      "name": "Course",
+      "fields": [
+        "private final String id",
+        "private final String name",
+        "private final int weeklyDuration",
+        "private final Set<Lecturer> lecturers = new LinkedHashSet<>()"
+      ],
+      "methods": [
+        {
+          "signature": "Course(String id, String name, int weeklyDuration, Lecturer lecturer)",
+          "body": "if (id == null || id.isBlank() || name == null || name.isBlank() || weeklyDuration <= 0)\n    throw new IllegalArgumentException(\"Нужны ID, название и положительная недельная нагрузка курса\");\nthis.id = id.strip();\nthis.name = name.strip();\nthis.weeklyDuration = weeklyDuration;\nlecturers.add(Objects.requireNonNull(lecturer));"
+        },
+        {
+          "signature": "public String getId()",
+          "body": "return id;"
+        },
+        {
+          "signature": "public String getName()",
+          "body": "return name;"
+        },
+        {
+          "signature": "public int getWeeklyDuration()",
+          "body": "return weeklyDuration;"
+        },
+        {
+          "signature": "public Set<Lecturer> getLecturers()",
+          "body": "return Collections.unmodifiableSet(lecturers);"
+        },
+        {
+          "signature": "void addLecturer(Lecturer lecturer)",
+          "body": "lecturers.add(Objects.requireNonNull(lecturer));"
+        }
+      ],
+      "parent": null,
+      "abstract": false
+    },
+    {
+      "name": "Lecturer",
+      "fields": [
+        "private final List<Course> courses = new ArrayList<>()"
+      ],
+      "methods": [
+        {
+          "signature": "Lecturer(String socialSecurityNumber, String name, String email, String researchArea, Institute institute)",
+          "body": "super(socialSecurityNumber, name, email, researchArea, institute);"
+        },
+        {
+          "signature": "void teachCourse(Course course)",
+          "body": "if (!course.getLecturers().contains(this)) throw new IllegalArgumentException(\"Другой преподаватель курса\");\nif (courses.contains(course)) throw new IllegalArgumentException(\"Курс уже назначен\");\ncourses.add(course);"
+        },
+        {
+          "signature": "public List<Course> getCourses()",
+          "body": "return Collections.unmodifiableList(courses);"
+        }
+      ],
+      "parent": "ResearchEmployee",
+      "abstract": false
+    },
+    {
+      "name": "University",
+      "fields": [
+        "private final String name",
+        "private final List<Faculty> faculties = new ArrayList<>()",
+        "private final List<ResearchEmployee> employees = new ArrayList<>()",
+        "private final List<Project> projects = new ArrayList<>()",
+        "private final List<Course> courses = new ArrayList<>()"
+      ],
+      "methods": [
+        {
+          "signature": "public University(String name)",
+          "body": "if (name == null || name.isBlank()) throw new IllegalArgumentException(\"Нужно название университета\");\nthis.name = name.strip();"
+        },
+        {
+          "signature": "public Faculty addFaculty(String name)",
+          "body": "if (faculties.stream().anyMatch(f -> f.getName().equals(name == null ? \"\" : name.strip())))\n    throw new IllegalArgumentException(\"Факультет уже существует\");\nFaculty faculty = new Faculty(this, name);\nfaculties.add(faculty);\nreturn faculty;"
+        },
+        {
+          "signature": "public ResearchEmployee registerEmployee(String ssn, String name, String email, String area, Institute institute, boolean lecturer)",
+          "body": "if (institute == null || institute.getFaculty().getUniversity() != this)\n    throw new IllegalArgumentException(\"Нужна кафедра этого университета\");\nif (employees.stream().anyMatch(e -> e.getSocialSecurityNumber().equals(ssn == null ? \"\" : ssn.strip())))\n    throw new IllegalArgumentException(\"Социальный код уже зарегистрирован\");\nResearchEmployee employee = lecturer ? new Lecturer(ssn, name, email, area, institute)\n    : new ResearchEmployee(ssn, name, email, area, institute);\nemployees.add(employee);\nreturn employee;"
+        },
+        {
+          "signature": "public ResearchEmployee findEmployee(String ssn)",
+          "body": "return employees.stream().filter(e -> e.getSocialSecurityNumber().equals(ssn)).findFirst()\n    .orElseThrow(() -> new IllegalArgumentException(\"Сотрудник не найден: \" + ssn));"
+        },
+        {
+          "signature": "public Project createProject(String name, LocalDate start, LocalDate end)",
+          "body": "if (projects.stream().anyMatch(p -> p.getName().equals(name == null ? \"\" : name.strip())))\n    throw new IllegalArgumentException(\"Проект уже существует\");\nProject project = new Project(name, start, end);\nprojects.add(project);\nreturn project;"
+        },
+        {
+          "signature": "public Participation assignToProject(String ssn, Project project, int hours)",
+          "body": "ResearchEmployee employee = findEmployee(ssn);\nif (!projects.contains(project)) throw new IllegalArgumentException(\"Проект другого университета\");\nreturn employee.joinProject(project, hours);"
+        },
+        {
+          "signature": "public Course assignCourse(String ssn, String id, String name, int weeklyDuration)",
+          "body": "ResearchEmployee employee = findEmployee(ssn);\nif (!(employee instanceof Lecturer)) throw new IllegalArgumentException(\"Сотрудник не является преподавателем\");\nLecturer lecturer = (Lecturer) employee;\nCourse course = courses.stream().filter(c -> c.getId().equals(id == null ? \"\" : id.strip())).findFirst().orElse(null);\nif (course != null) {\n    if (!course.getName().equals(name == null ? \"\" : name.strip()) || course.getWeeklyDuration() != weeklyDuration)\n        throw new IllegalArgumentException(\"ID курса занят другим курсом\");\n    if (course.getLecturers().contains(lecturer)) throw new IllegalArgumentException(\"Курс уже назначен преподавателю\");\n    course.addLecturer(lecturer);\n} else {\n    course = new Course(id, name, weeklyDuration, lecturer);\n    courses.add(course);\n}\nlecturer.teachCourse(course);\nreturn course;"
+        },
+        {
+          "signature": "public void validateReady()",
+          "body": "if (faculties.isEmpty()) throw new IllegalStateException(\"Нужен хотя бы один факультет\");\nfor (Faculty faculty : faculties) {\n    if (faculty.getDean() == null || faculty.getInstitutes().isEmpty())\n        throw new IllegalStateException(\"Нужно назначить декана и создать кафедру: \" + faculty.getName());\n}"
+        },
+        {
+          "signature": "public int getNumberOfEmployees()",
+          "body": "return employees.size();"
+        },
+        {
+          "signature": "public List<Faculty> getFaculties()",
+          "body": "return Collections.unmodifiableList(faculties);"
+        },
+        {
+          "signature": "public List<ResearchEmployee> getEmployees()",
+          "body": "return Collections.unmodifiableList(employees);"
+        },
+        {
+          "signature": "public List<Project> getProjects()",
+          "body": "return Collections.unmodifiableList(projects);"
+        },
+        {
+          "signature": "public List<Course> getCourses()",
+          "body": "return Collections.unmodifiableList(courses);"
+        },
+        {
+          "signature": "public String getName()",
+          "body": "return name;"
+        }
+      ],
+      "parent": null,
+      "abstract": false
+    }
+  ],
+  "relationships": [
+    "University \"1\" *-- \"0..*\" Faculty : faculties",
+    "Faculty \"1\" *-- \"0..*\" Institute : institutes",
+    "University \"1\" o-- \"0..*\" ResearchEmployee : employees",
+    "Faculty \"0..1\" --> \"0..1\" Employee : dean",
+    "ResearchEmployee \"0..*\" --> \"1..*\" Institute : institutes",
+    "ResearchEmployee \"1\" *-- \"0..*\" Participation : participations",
+    "Participation \"0..*\" --> \"1\" Project : project",
+    "University \"1\" o-- \"0..*\" Project : projects",
+    "University \"1\" o-- \"0..*\" Course : courses",
+    "Lecturer \"1..*\" -- \"0..*\" Course : teaches"
+  ]
+}

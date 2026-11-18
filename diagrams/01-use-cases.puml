@@ -1,0 +1,23 @@
+@startuml
+!pragma layout smetana
+left to right direction
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+actor "Оператор учебно-научного учёта" as Operator
+actor "Декан" as Dean
+rectangle "Университетская информационная система" {
+  usecase "UC-01\nВести структуру университета" as UC01
+  usecase "UC-02\nВести научно-педагогический состав" as UC02
+  usecase "UC-03\nНазначить декана факультета" as UC03
+  usecase "UC-04\nУчитывать участие в проектах" as UC04
+  usecase "UC-05\nНазначить преподавателя на курс" as UC05
+  usecase "UC-06\nПолучить сводку университета" as UC06
+}
+Operator -- UC01
+Operator -- UC02
+Operator -- UC03
+Operator -- UC04
+Operator -- UC05
+Operator -- UC06
+Dean -- UC06
+@enduml

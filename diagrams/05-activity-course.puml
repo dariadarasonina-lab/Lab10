@@ -1,0 +1,31 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+title UC-05 — назначить преподавателя на курс
+start
+:Оператор вводит ssn, ID курса,\nназвание и часов в неделю;
+:Найти сотрудника: findEmployee(ssn);
+if (Сотрудник найден и является Lecturer?) then (да)
+  :Найти курс по уникальному ID;
+  if (Курс существует?) then (да)
+    if (Название и часы совпадают,\nпреподаватель ещё не назначен?) then (да)
+      :Course.addLecturer(lecturer);
+    else (нет)
+      :Сообщить об ошибке,\nданные не изменять;
+      stop
+    endif
+  else (нет)
+    if (ID и название не пусты, часы > 0?) then (да)
+      :Создать Course с первым преподавателем;\nдобавить в реестр университета;
+    else (нет)
+      :Сообщить об ошибке,\nданные не изменять;
+      stop
+    endif
+  endif
+  :Lecturer.teachCourse(course);
+  :Подтвердить назначение курса;
+else (нет)
+  :Сообщить об ошибке,\nданные не изменять;
+endif
+stop
+@enduml

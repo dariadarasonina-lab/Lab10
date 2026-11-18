@@ -1,0 +1,148 @@
+{
+  "ru.lab10.cli.App": {
+    "header": "public class ru.lab10.cli.App {",
+    "members": [
+      "private final ru.lab10.domain.University university",
+      "private final java.util.Scanner input",
+      "public ru.lab10.cli.App()",
+      "public static void main(java.lang.String[])",
+      "public void run()",
+      "private java.lang.String read(java.lang.String)",
+      "private ru.lab10.domain.Faculty faculty(java.lang.String)",
+      "private ru.lab10.domain.Institute institute()",
+      "public void manageStructure()",
+      "public void manageEmployee()",
+      "public void appointDean()",
+      "public void assignProject()",
+      "public void assignCourse()",
+      "public void printSummary()",
+      "public void demo()"
+    ]
+  },
+  "ru.lab10.domain.Course": {
+    "header": "public class ru.lab10.domain.Course {",
+    "members": [
+      "private final java.lang.String id",
+      "private final java.lang.String name",
+      "private final int weeklyDuration",
+      "private final java.util.Set<ru.lab10.domain.Lecturer> lecturers",
+      "ru.lab10.domain.Course(java.lang.String, java.lang.String, int, ru.lab10.domain.Lecturer)",
+      "public java.lang.String getId()",
+      "public java.lang.String getName()",
+      "public int getWeeklyDuration()",
+      "public java.util.Set<ru.lab10.domain.Lecturer> getLecturers()",
+      "void addLecturer(ru.lab10.domain.Lecturer)"
+    ]
+  },
+  "ru.lab10.domain.Employee": {
+    "header": "public abstract class ru.lab10.domain.Employee {",
+    "members": [
+      "private final java.lang.String socialSecurityNumber",
+      "private final java.lang.String name",
+      "private final java.lang.String email",
+      "protected ru.lab10.domain.Employee(java.lang.String, java.lang.String, java.lang.String)",
+      "public java.lang.String getSocialSecurityNumber()",
+      "public java.lang.String getName()",
+      "public java.lang.String getEmail()"
+    ]
+  },
+  "ru.lab10.domain.Faculty": {
+    "header": "public class ru.lab10.domain.Faculty {",
+    "members": [
+      "private final ru.lab10.domain.University university",
+      "private final java.lang.String name",
+      "private ru.lab10.domain.Employee dean",
+      "private final java.util.List<ru.lab10.domain.Institute> institutes",
+      "ru.lab10.domain.Faculty(ru.lab10.domain.University, java.lang.String)",
+      "public ru.lab10.domain.Institute addInstitute(java.lang.String, java.lang.String)",
+      "public void appointDean(ru.lab10.domain.Employee)",
+      "public java.util.List<ru.lab10.domain.Institute> getInstitutes()",
+      "public ru.lab10.domain.University getUniversity()",
+      "public java.lang.String getName()",
+      "public ru.lab10.domain.Employee getDean()"
+    ]
+  },
+  "ru.lab10.domain.Institute": {
+    "header": "public class ru.lab10.domain.Institute {",
+    "members": [
+      "private final ru.lab10.domain.Faculty faculty",
+      "private final java.lang.String name",
+      "private final java.lang.String address",
+      "ru.lab10.domain.Institute(ru.lab10.domain.Faculty, java.lang.String, java.lang.String)",
+      "public ru.lab10.domain.Faculty getFaculty()",
+      "public java.lang.String getName()",
+      "public java.lang.String getAddress()"
+    ]
+  },
+  "ru.lab10.domain.Lecturer": {
+    "header": "public class ru.lab10.domain.Lecturer extends ru.lab10.domain.ResearchEmployee {",
+    "members": [
+      "private final java.util.List<ru.lab10.domain.Course> courses",
+      "ru.lab10.domain.Lecturer(java.lang.String, java.lang.String, java.lang.String, java.lang.String, ru.lab10.domain.Institute)",
+      "void teachCourse(ru.lab10.domain.Course)",
+      "public java.util.List<ru.lab10.domain.Course> getCourses()"
+    ]
+  },
+  "ru.lab10.domain.Participation": {
+    "header": "public class ru.lab10.domain.Participation {",
+    "members": [
+      "private final ru.lab10.domain.ResearchEmployee employee",
+      "private final ru.lab10.domain.Project project",
+      "private final int hours",
+      "ru.lab10.domain.Participation(ru.lab10.domain.ResearchEmployee, ru.lab10.domain.Project, int)",
+      "public ru.lab10.domain.ResearchEmployee getEmployee()",
+      "public ru.lab10.domain.Project getProject()",
+      "public int getHours()"
+    ]
+  },
+  "ru.lab10.domain.Project": {
+    "header": "public class ru.lab10.domain.Project {",
+    "members": [
+      "private final java.lang.String name",
+      "private final java.time.LocalDate startingDate",
+      "private final java.time.LocalDate endDate",
+      "ru.lab10.domain.Project(java.lang.String, java.time.LocalDate, java.time.LocalDate)",
+      "public java.lang.String getName()",
+      "public java.time.LocalDate getStartingDate()",
+      "public java.time.LocalDate getEndDate()"
+    ]
+  },
+  "ru.lab10.domain.ResearchEmployee": {
+    "header": "public class ru.lab10.domain.ResearchEmployee extends ru.lab10.domain.Employee {",
+    "members": [
+      "private final java.lang.String researchArea",
+      "private final java.util.Set<ru.lab10.domain.Institute> institutes",
+      "private final java.util.List<ru.lab10.domain.Participation> participations",
+      "ru.lab10.domain.ResearchEmployee(java.lang.String, java.lang.String, java.lang.String, java.lang.String, ru.lab10.domain.Institute)",
+      "public void attachTo(ru.lab10.domain.Institute)",
+      "ru.lab10.domain.Participation joinProject(ru.lab10.domain.Project, int)",
+      "public java.util.Set<ru.lab10.domain.Institute> getInstitutes()",
+      "public java.util.List<ru.lab10.domain.Participation> getParticipations()",
+      "public java.lang.String getResearchArea()"
+    ]
+  },
+  "ru.lab10.domain.University": {
+    "header": "public class ru.lab10.domain.University {",
+    "members": [
+      "private final java.lang.String name",
+      "private final java.util.List<ru.lab10.domain.Faculty> faculties",
+      "private final java.util.List<ru.lab10.domain.ResearchEmployee> employees",
+      "private final java.util.List<ru.lab10.domain.Project> projects",
+      "private final java.util.List<ru.lab10.domain.Course> courses",
+      "public ru.lab10.domain.University(java.lang.String)",
+      "public ru.lab10.domain.Faculty addFaculty(java.lang.String)",
+      "public ru.lab10.domain.ResearchEmployee registerEmployee(java.lang.String, java.lang.String, java.lang.String, java.lang.String, ru.lab10.domain.Institute, boolean)",
+      "public ru.lab10.domain.ResearchEmployee findEmployee(java.lang.String)",
+      "public ru.lab10.domain.Project createProject(java.lang.String, java.time.LocalDate, java.time.LocalDate)",
+      "public ru.lab10.domain.Participation assignToProject(java.lang.String, ru.lab10.domain.Project, int)",
+      "public ru.lab10.domain.Course assignCourse(java.lang.String, java.lang.String, java.lang.String, int)",
+      "public void validateReady()",
+      "public int getNumberOfEmployees()",
+      "public java.util.List<ru.lab10.domain.Faculty> getFaculties()",
+      "public java.util.List<ru.lab10.domain.ResearchEmployee> getEmployees()",
+      "public java.util.List<ru.lab10.domain.Project> getProjects()",
+      "public java.util.List<ru.lab10.domain.Course> getCourses()",
+      "public java.lang.String getName()"
+    ]
+  }
+}

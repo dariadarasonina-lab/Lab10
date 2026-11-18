@@ -1,0 +1,37 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName SansSerif
+title UC-05 — назначить преподавателя на новый курс (основной сценарий)
+actor "Оператор" as Operator
+participant "app:App" as App
+participant "university:University" as U
+participant "lecturer:Lecturer" as L
+Operator -> App : assignCourse()
+activate App
+note over App : Ввод ssn, id, name, weeklyDuration
+App -> U : assignCourse(ssn, id, name, weeklyDuration)
+activate U
+U -> U : findEmployee(ssn)
+U --> U : lecturer
+note over U,L : Проверка типа Lecturer и поиск курса по ID
+alt сотрудник — Lecturer, ID новый, поля допустимы
+create participant "course:Course" as C
+U -> C : Course(id, name, weeklyDuration, lecturer)
+note over U : Добавить course в реестр courses
+U -> L : teachCourse(course)
+activate L
+L -> C : getLecturers()
+C --> L : lecturers
+note over L : Проверить принадлежность и добавить course
+L --> U : void
+deactivate L
+U --> App : course
+App --> Operator : Курс назначен
+else сотрудник не преподаватель / данные неверны
+U --> App : IllegalArgumentException
+App --> Operator : Сообщение об ошибке
+end
+deactivate U
+deactivate App
+note over App,U : Классы и операции присутствуют в 03-class-reverse.\nАльтернатива: существующий курс связывается с ещё одним преподавателем.
+@enduml
